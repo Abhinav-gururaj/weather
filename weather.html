@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>weather report</title><script src="https://openweathermap.org/forecast5"/>
+		<script lang="text/javascript">
+			let city;
+			async function f(){
+				city=document.getElementById("cname");
+				let weather=await fw();
+				console.log(weather);
+			}
+			async fw(){
+				let res=await fetch("http://api.openweathermap.org/data/2.5/forecast?q=hyderabad&appid=78ca13277e3b51d7ef9b99120f538a6d");
+				let we=await res.json();
+				return we;
+			}
+		</script>
+	</head>
+	<body>
+		<form onsubmit="f()">
+			<label for="w">weather</label>
+			<input type="text" id="w"/>
+			<input type="submit" value="Submit">
+		</form>
+		<p id="cname"></p>
+		
+	</body>
+</html>
