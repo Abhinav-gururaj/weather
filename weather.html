@@ -3,27 +3,80 @@
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>weather report</title><script src="https://openweathermap.org/forecast5"/>
+		<title>weather report</title>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 		<script lang="text/javascript">
 			let city;
 			async function f(){
 				city=document.getElementById("cname");
 				let weather=await fw();
+				
 				console.log(weather);
+
+				let temp=[];
+				let col=[];
+				var i;
+				for (i = 0; i < 5; i++) {
+  					temp.push(weather.list[i*8].main.temp);
+					col.push((new Date((weather.list[i*8].dt)*1000)).getDate());
+				}
+				city.innerHTML=(temp);
+				var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: col,
+        datasets: [{
+            label: 'temperature',
+            data: temp,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+				// let {temp} = main;
+
+				// console.log(temp);
 			}
-			async fw(){
-				let res=await fetch("http://api.openweathermap.org/data/2.5/forecast?q=hyderabad&appid=78ca13277e3b51d7ef9b99120f538a6d");
+			async function fw(){
+				let reqcity=document.getElementById("w").value;
+				console.log(reqcity);
+				let res=await fetch("http://api.openweathermap.org/data/2.5/forecast?q="+reqcity+"&appid=78ca13277e3b51d7ef9b99120f538a6d&units=metric");
 				let we=await res.json();
 				return we;
 			}
 		</script>
 	</head>
 	<body>
-		<form onsubmit="f()">
+
 			<label for="w">weather</label>
 			<input type="text" id="w"/>
-			<input type="submit" value="Submit">
-		</form>
+			<input type="button" value="Submit" onclick="f()">
+			<canvas id="myChart" width="400" height="400"></canvas>
 		<p id="cname"></p>
 		
 	</body>
